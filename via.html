@@ -500,19 +500,15 @@
 
               <div>
                 <div class=" row col-sm">
-                   <div class="col-sm-3 slider">
+                   <div title="CHANGE THESE PARAMETERS FOR BETTER RESULTS" class="col-sm-3 slider">
 
                                 <p>Min distance between circles- <span id="slider_value2" style="color:red;"></span></p>
                                 
                   <input width="400" type="range" min="0" max="100" value="20" class="slider red" id="S2" onchange="show_value2(this.value);">
                   <br>
 
-                                   <p>threshold1- <span id="slider_value3" style="color:red;"></span></p>
-                                   
-                  <input width="400" type="range" min="0" max="100" value="5" class="slider red" id="S3" onchange="show_value3(this.value);">
-                                   <br>
-
-                                   <p>threshold2- <span id="slider_value4" style="color:red;"></span></p>
+                             
+                                   <p>threshold (decreasing this might increase wrong detection- <span id="slider_value4" style="color:red;"></span></p>
                                    
                   <input width="400" type="range" min="0" max="100" value="29" class="slider red" id="S4" onchange="show_value4(this.value);">
                                    <br>
@@ -541,7 +537,7 @@
                                   </div>
                                                 <ul class="list-group list-group-flush">
                                                     <li class="list-group-item">
-                                                      <button type="button" id="circlesButton" class="btn btn-primary">Detect feather eyes</button>
+                                                      <button type="button" id="circlesButton" title="after settting the parameters, click this button" class="btn btn-primary">Detect feather eyes</button>
                                                     </li>
                                               <!-- <li  class="list-group-item">
                                                 <a href="#" id="button" class="card-link ">Download Image</a>
@@ -589,7 +585,6 @@
                <option value = "5">5</option>
                <option value = "6">6</option>
              </select>
-         
                   
                  </div>
         </div>
@@ -625,6 +620,8 @@
 <!-- ##############################################--JAVASCRIPT-SECTION--#################################################################### -->
 
 
+
+
 <script type="text/javascript">
 
 
@@ -646,98 +643,15 @@ function inside(point, vs) {
 
     return inside;
 };
-var arr_x;
-var arr_y;
-var polygon = [];
-
-document.body.classList.add("loading");
-
-let imgElement = document.getElementById('imageOriginal');
-let inputElement = document.getElementById('invisible_file_input');
-inputElement.addEventListener('change', (e) => {
-  imgElement.src = URL.createObjectURL(e.target.files[0]);
-}, false);
-
-var points = [];
-
-  document.getElementById('circlesButton').onclick = function() {
 
 
-  this.disabled = true;
-
-// =======================================================
-  var json_file = pack_via_metadata('json');
-  var d = JSON.parse(json_file);
-   // console.log(d);
-  // console.log(_via_img_metadata);
-  var firstKey = Object.keys(d)[0];
-  // console.log(firstKey);
-  arr_x = d[firstKey].regions[0].shape_attributes.all_points_x;
-  console.log(arr_x);
-  arr_y = d[firstKey].regions[0].shape_attributes.all_points_y;
-  console.log(arr_y);
-
-
-  for(var i=0;i<arr_x.length;i++)
-  {
-  	var x = [arr_x[i],[arr_y[i]]];
-  	polygon.push(x);
-  }
-  // ==========================================================
-
-  
-  // var v1=document.getElementById("S1").value;
-  var v2=document.getElementById("S2").value;
-  var v3=document.getElementById("S3").value;
-  var v4=document.getElementById("S4").value;
-  var v5=document.getElementById("S5").value;
-  var v6=document.getElementById("S6").value;
-
-  // var vv1 = parseFloat(v1);
-  var vv2 = parseFloat(v2);
-  var vv3 = parseFloat(v3);
-  var vv4 = parseFloat(v4);
-  var vv5 = parseFloat(v5);
-  var vv6 = parseFloat(v6);
-
-  let mat = cv.imread(imgElement); //<-------
-  // let dst = mat.clone();
-  let circles = new cv.Mat();
-  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
-  // You can try more different parameters
-  cv.HoughCircles(mat, circles, cv.HOUGH_GRADIENT, 1, vv2, vv3, vv4, vv5, vv6);
-  // draw circles
-
-  console.log(circles.rows, circles.cols);
-
-let pointSize = 7;
-// var points = [];
-var timeout = 300;
-var clicks = 0;
-
-  // for (let i = 0; i < circles.cols; ++i)
-  //     {
-  //     let x = circles.data32F[i * 3];
-  //     let y = circles.data32F[i * 3 + 1];
-  //     //let radius = circles.data32F[i * 3 + 2];
-  //     let center = new cv.Point(x, y);
-  //     cv.circle(dst, center, 2, [200, 200, 200, 255], 8);
-  //     }
-
-// console.log("initial_initial_p", points);
-
-
-const canvas = document.getElementById("canvas_2");
-const ctx = canvas.getContext("2d");
-// let cw = (canvas.width=1920);
-// let ch = (canvas.height=1200);
-let img1 = document.getElementById('imageOriginal'); 
-let cw1 = img1.clientWidth;
-let ch1 = img1.clientHeight;
-let cw = (canvas.width=cw1);
-let ch = (canvas.height=ch1);
-// console.log("w",cw);
-// console.log("h",ch);
+var canvas = document.getElementById("canvas_2");
+var ctx = canvas.getContext("2d");
+var img1 = document.getElementById('imageOriginal'); 
+var cw1 = img1.clientWidth;
+var ch1 = img1.clientHeight;
+var cw = (canvas.width=cw1);
+var ch = (canvas.height=ch1);
 
 function getPosition(event) {
   var rect = canvas.getBoundingClientRect();
@@ -752,7 +666,6 @@ function return_point_array(event){
 	return [event.clientX - rect.left, event.clientY - rect.top];
 }
 
-
 function drawCoordinates(point, r) {
   var ctx = document.getElementById("canvas_2").getContext("2d");
   ctx.fillStyle = "#ff2626"; // Red color
@@ -761,85 +674,177 @@ function drawCoordinates(point, r) {
   ctx.fill();
 }
 
-points=[];
-// console.log("initial_p", points);
-var check_point;
 
-  for (let i = 0; i < circles.cols; ++i)
-      {
-        let p= {
-            x: circles.data32F[i * 3],
-            y: circles.data32F[i * 3 + 1]
-          };
-          check_point = [circles.data32F[i * 3], circles.data32F[i * 3 + 1]];
-          if( inside(check_point,polygon)){
-        		points.push(p);
-        	}
-      }
-       points.map(p => {
-        drawCoordinates(p, pointSize);
-      });
-       // console.log("after HoughCircles", points);
-       document.getElementById("count_tag").innerHTML = points.length;
 
-  this.disabled = false;
+var arr_x;
+var arr_y;
+var polygon = [];
+var pointSize = 7;
+var timeout = 300;
+var clicks = 0;
+
+document.body.classList.add("loading");
+
+let imgElement = document.getElementById('imageOriginal');
+let inputElement = document.getElementById('invisible_file_input');
+inputElement.addEventListener('change', (e) => {
+  imgElement.src = URL.createObjectURL(e.target.files[0]);
+}, false);
+
+var points = [];
+
+document.getElementById('circlesButton').onclick = function() {
+
+  polygon = [];
+  this.disabled = true;
+
+		// =======================================================
+		  var json_file = pack_via_metadata('json');
+		  var d = JSON.parse(json_file);
+		  var firstKey = Object.keys(d)[0];
+		  // console.log(firstKey);
+		  arr_x = d[firstKey].regions[0].shape_attributes.all_points_x;
+		  console.log(arr_x);
+		  arr_y = d[firstKey].regions[0].shape_attributes.all_points_y;
+		  console.log(arr_y);
+  
+
+	    	  for(var i=0;i<arr_x.length;i++)
+		  {
+		  	var x = [arr_x[i],[arr_y[i]]];
+		  	polygon.push(x);
+		  }
+		  // ==========================================================
+
+		  
+		  // var v1=document.getElementById("S1").value;
+		  var v2=document.getElementById("S2").value;
+		  // var v3=document.getElementById("S3").value;
+		  var v4=document.getElementById("S4").value;
+		  var v5=document.getElementById("S5").value;
+		  var v6=document.getElementById("S6").value;
+
+		  // var vv1 = parseFloat(v1);
+		  var vv2 = parseFloat(v2);
+		  // var vv3 = parseFloat(v3);
+		  var vv4 = parseFloat(v4);
+		  var vv5 = parseFloat(v5);
+		  var vv6 = parseFloat(v6);
+
+		  let mat = cv.imread(imgElement); //<-------
+		  // let dst = mat.clone();
+		  let circles = new cv.Mat();
+		  cv.cvtColor(mat, mat, cv.COLOR_RGBA2GRAY, 0);
+		  // You can try more different parameters
+		  cv.HoughCircles(mat, circles, cv.HOUGH_GRADIENT, 1, vv2, 5, vv4, vv5, vv6);
+		  // draw circles
+
+		  console.log(circles.rows, circles.cols);
+
+		points = [];
+
+		const canvas = document.getElementById("canvas_2");
+		const ctx = canvas.getContext("2d");
+		let img1 = document.getElementById('imageOriginal'); 
+		let cw1 = img1.clientWidth;
+		let ch1 = img1.clientHeight;
+		let cw = (canvas.width=cw1);
+		let ch = (canvas.height=ch1);
+		
+		var check_point;
+		console.log("circles column size",circles.cols);
+
+		  for (let i = 0; i < circles.cols; ++i)
+		      {
+		        let p= {
+		            x: circles.data32F[i * 3],
+		            y: circles.data32F[i * 3 + 1]
+		          };
+		          check_point = [circles.data32F[i * 3], circles.data32F[i * 3 + 1]];
+		          if( inside(check_point,polygon)){
+		        		points.push(p);
+		        	}
+		      }
+		       points.map(p => {
+		        drawCoordinates(p, pointSize);
+		      });
+		       console.log("after HoughCircles", points);
+		       document.getElementById("count_tag").innerHTML = points.length;
+
+		  this.disabled = false;
+
+
+
+
+		  mat.delete();
+		  circles.delete();
+		  console.log("AT the END OF BUTTON");
+};
+
 
 
 $("#canvas_2").click(function(e){
 
-  clicks++;
-  var m = getPosition(e);
-  // this point won't be added to the points array
-  // it's here only to mark the point on click since otherwise it will appear with a delay equal to the timeout
-  var z = return_point_array(e);
-  if(inside(z , polygon)){
+		      points.map(p => {
+		        drawCoordinates(p, pointSize);
+		      });
+		const canvas = document.getElementById("canvas_2");
+		const ctx = canvas.getContext("2d");
+		let img1 = document.getElementById('imageOriginal'); 
+		let cw1 = img1.clientWidth;
+		let ch1 = img1.clientHeight;
+		let cw = (canvas.width=cw1);
+		let ch = (canvas.height=ch1);
+				      points.map(p => {
+		        drawCoordinates(p, pointSize);
+		      });
+		
+	
+		console.log("JUST INSIDE CLICK POINT FUNC");
+		console.log("No of clicks",clicks);
+		  clicks++;
+		  var m = getPosition(e);
+		  // this point won't be added to the points array
+		  // it's here only to mark the point on click since otherwise it will appear with a delay equal to the timeout
+		  var z = return_point_array(e);
+		  if(inside(z , polygon)){
 
-  	drawCoordinates(m, pointSize);
-  }
-  
-  if (clicks == 1) {
-    setTimeout(function() {
-      if (clicks == 1) {
-        // on click add a new point to the points array
-        var z = return_point_array(e);
-  		if(inside(z , polygon)){
+		  	drawCoordinates(m, pointSize);
+		  }
+		  
+		  if (clicks == 1) {
+		    setTimeout(function() {
+		      if (clicks == 1) {
+		        // on click add a new point to the points array
+		        var z = return_point_array(e);
+		  		if(inside(z , polygon)){
+			        points.push(m);
+			          console.log("point added", points);
+	      	    }
+		      } else { // on double click 
+		        // 1. check if point in path
+		        for (let i = 0; i < points.length; i++) {
+		          ctx.beginPath();
+		          ctx.arc(points[i].x, points[i].y, pointSize, 0, Math.PI * 2, true);
 
-        points.push(m);
-    }
-    
-      } else { // on double click 
-        // 1. check if point in path
-        for (let i = 0; i < points.length; i++) {
-          ctx.beginPath();
-          ctx.arc(points[i].x, points[i].y, pointSize, 0, Math.PI * 2, true);
+		          if (ctx.isPointInPath(m.x, m.y)) {
+		            points.splice(i, 1); // remove the point from the array
+		             console.log("point removed", points);
+		            break;// if a point is found and removed, break the loop. No need to check any further.
+		          }
+		        }
+		        //clear the canvas
+		        ctx.clearRect(0, 0, cw, ch);
+		      }
 
-          if (ctx.isPointInPath(m.x, m.y)) {
-            points.splice(i, 1); // remove the point from the array
-            break;// if a point is found and removed, break the loop. No need to check any further.
-          }
-        }
-
-        //clear the canvas
-        ctx.clearRect(0, 0, cw, ch);
-      }
-      // console.log("inside click function",points);
-         document.getElementById("count_tag").innerHTML = points.length;
-      points.map(p => {
-        drawCoordinates(p, pointSize);
-      });
-      clicks = 0;
-    }, timeout);
-  }
+		         document.getElementById("count_tag").innerHTML = points.length;
+		      points.map(p => {
+		        drawCoordinates(p, pointSize);
+		      });
+		      clicks = 0;
+		    }, timeout);
+		 }
 });
-console.log("after point input",points);
- mat.delete();
-  // dst.delete();
-  circles.delete();
-  console.log("AT the END");
-
-};
-
-
 
 function onOpenCvReady() {
   document.body.classList.remove("loading");
@@ -847,7 +852,6 @@ function onOpenCvReady() {
 
 // =========================================================================
 </script>
-
 <script type="text/javascript">
 "use strict";
 
@@ -1014,12 +1018,12 @@ function _via_init() {
   show_home_panel();
   init_leftsidebar_accordion();
 
-  _via_is_local_storage_available = check_local_storage();
-  if (_via_is_local_storage_available) {
-    if (is_via_data_in_localStorage()) {
-      show_localStorage_recovery_options();
-    }
-  }
+  // _via_is_local_storage_available = check_local_storage();
+  // if (_via_is_local_storage_available) {
+  //   if (is_via_data_in_localStorage()) {
+  //     show_localStorage_recovery_options();
+  //   }
+  // }
 
   // run attached sub-modules (if any)
   if (typeof _via_load_submodules === 'function') {
@@ -4796,12 +4800,12 @@ function pack_via_metadata_edited(return_type) {
         var peacock_angle_option = mylist_option.options[mylist_option.selectedIndex].value;
         var parameters = [];
           var v2=document.getElementById("S2").value;
-          var v3=document.getElementById("S3").value;
+          // var v3=document.getElementById("S3").value;
           var v4=document.getElementById("S4").value;
           var v5=document.getElementById("S5").value;
           var v6=document.getElementById("S6").value;
           parameters.push({var2:v2});
-          parameters.push({var3:v3});
+          // parameters.push({var3:v3});
           parameters.push({var4:v4});
           parameters.push({var5:v5});
           parameters.push({var6:v6});
